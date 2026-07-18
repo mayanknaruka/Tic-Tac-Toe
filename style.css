@@ -1,21 +1,3 @@
-#gameboard{
-    display:grid;
-    grid-template-columns:repeat(3,100px);
-    gap:5px;
-}
-
-.cell{
-    width:100px;
-    height:100px;
-    border:2px solid black;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    font-size:40px;
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -112,4 +94,9 @@ button:hover {
 
 .cell:hover {
     background: #eeeeee;
+}
+h1 {
+    margin-bottom: 30px;
+    font-size: 40px;
+    color: #333;
 }
