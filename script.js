@@ -2,7 +2,12 @@ const Gameboard = (() => {
     const board = ["", "", "", "", "", "", "", "", ""];
 
     function placeMark(index, mark) {
+        if (board[index] !== "") {
+            return false;
+        }
+
         board[index] = mark;
+        return true;
     }
 
     function getBoard() {
@@ -10,11 +15,9 @@ const Gameboard = (() => {
     }
 
     return {
-        board,
         placeMark,
         getBoard,
     };
-
 })();
 
 function Player(name, mark) {
@@ -32,16 +35,13 @@ const gameController = (() => {
     let currentPlayer = playerOne;
 
     function switchPlayer() {
-        if (currentPlayer === playerOne) {
-            currentPlayer = playerTwo;
-        } else {
-            currentPlayer = playerOne;
-        }
+        currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
     }
 
     function checkWinner() {
         const board = Gameboard.getBoard();
 
+        // Step 5
         return false;
     }
 
@@ -52,7 +52,13 @@ const gameController = (() => {
     }
 
     function playRound(index) {
-        Gameboard.placeMark(index, currentPlayer.mark);
+
+        if (!Gameboard.placeMark(index, currentPlayer.mark)) {
+            console.log("Cell already occupied!");
+            return;
+        }
+
+        displayController.render();
 
         if (checkWinner()) {
             console.log(currentPlayer.name + " wins!");
@@ -75,14 +81,38 @@ const gameController = (() => {
 
 const displayController = (() => {
 
-    return {
+    const boardContainer = document.getElementById("gameboard");
 
+    function render() {
+
+        boardContainer.innerHTML = "";
+
+        const board = Gameboard.getBoard();
+
+        board.forEach((cell, index) => {
+
+            const square = document.createElement("div");
+
+            square.classList.add("cell");
+
+            square.textContent = cell;
+
+            square.dataset.index = index;
+
+            square.addEventListener("click", () => {
+                gameController.playRound(index);
+            });
+
+            boardContainer.appendChild(square);
+
+        });
+
+    }
+
+    return {
+        render,
     };
 
 })();
 
-gameController.playRound(0);
-gameController.playRound(4);
-gameController.playRound(1);
-gameController.playRound(5);
-gameController.playRound(2);
+displayController.render();
